@@ -23,7 +23,8 @@ every conclusion traceable to its source.
 - **ACMG/AMP classification assisted by an LLM**, with a hard rule: *a result without a valid, verifiable source citation is discarded and never persisted.* Criteria are validated structurally against the evidence actually available.
 - **Curated virtual gene panels**, **PDF reports**, **variant search/filtering**, large-file upload through signed URLs, batched asynchronous processing.
 - **Security & governance:** cookie-based sessions with server-side revocation, RBAC, TOTP MFA, invite-only registration with admin approval, rate limiting, security headers, full audit trail.
-- **Quality:** 279 automated backend tests, CI on every push, dependency auditing, a documented stage-by-stage delivery history.
+- **International by design:** the UI is available in English, Portuguese, Spanish and French, chosen at sign-in; API errors carry stable codes that the frontend translates, and CI fails if a translation is missing.
+- **Quality:** 294 automated backend tests and 39 frontend tests, CI on every push, dependency auditing as a merge gate, an OWASP ZAP baseline scan, and a documented stage-by-stage delivery history.
 
 ## Architecture (high level)
 
@@ -45,7 +46,7 @@ flowchart LR
 
 Design principles — details in [docs/architecture.md](docs/architecture.md):
 
-1. **Ports and adapters everywhere.** Queue, storage, database, LLM and every external knowledge source sit behind an interface, so the same code runs at zero cost locally and scales out later by configuration only.
+1. **Ports and adapters.** Queue, storage, database, LLM and every external knowledge source sit behind an interface, so the same code can run at zero cost locally and scale out later by configuration only. (Queue and storage already work this way; the rest is in progress.)
 2. **Provenance first.** Every annotation records which database/build/version produced it.
 3. **Evidence over eloquence.** The AI layer may only assert what it can cite.
 4. **Compliance by construction.** LGPD/GDPR-aware data handling, audit logging, and a quality system aligned with IEC 62304 / ISO 14971 from the start.
@@ -55,7 +56,8 @@ Design principles — details in [docs/architecture.md](docs/architecture.md):
 | Area | Status |
 |---|---|
 | Single-sample germline interpretation | ✅ working |
-| Multilingual UI (EN / PT / ES / FR and more) | 🔜 next |
+| Zero-cost local profile (ports & adapters: queue, storage, database, LLM, knowledge sources) | 🔜 next |
+| Multilingual UI (EN / PT / ES / FR; more languages by configuration) | ✅ working |
 | Local reference snapshots (VEP cache, ClinVar, gnomAD) | 🔜 planned |
 | FASTQ → VCF workflows (Nextflow / nf-core) | 🔜 planned |
 | Trio / multi-sample, CNV & structural variants | 🔜 planned |

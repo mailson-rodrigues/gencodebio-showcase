@@ -14,7 +14,8 @@
 - **Classificação ACMG/AMP assistida por IA**, com regra rígida: *resultado sem citação de fonte válida e verificável é descartado e nunca persistido.*
 - **Painéis virtuais curados**, **laudo em PDF**, busca e filtro de variantes, upload de arquivos grandes por URL assinada, processamento assíncrono em lotes.
 - **Segurança e governança:** sessões revogáveis no servidor, RBAC, MFA TOTP, cadastro por convite com aprovação, rate limiting, trilha de auditoria completa.
-- **Qualidade:** 279 testes automatizados no backend, CI a cada push, auditoria de dependências, histórico documentado por etapas.
+- **Internacional:** interface em português, inglês, espanhol e francês, escolhida no acesso; erros da API com códigos estáveis traduzidos no frontend; o CI falha se faltar uma tradução.
+- **Qualidade:** 294 testes automatizados no backend e 39 no frontend, CI a cada push, auditoria de dependências como gate, varredura OWASP ZAP e histórico documentado por etapas.
 
 ## Arquitetura e roadmap
 
