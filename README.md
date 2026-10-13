@@ -24,7 +24,14 @@ every conclusion traceable to its source.
 - **Curated virtual gene panels**, **PDF reports**, **variant search/filtering**, large-file upload through signed URLs, batched asynchronous processing.
 - **Security & governance:** cookie-based sessions with server-side revocation, RBAC, TOTP MFA, invite-only registration with admin approval, rate limiting, security headers, full audit trail.
 - **International by design:** the UI is available in English, Portuguese, Spanish and French, chosen at sign-in; API errors carry stable codes that the frontend translates, and CI fails if a translation is missing.
-- **Quality:** 294 automated backend tests and 39 frontend tests, CI on every push, dependency auditing as a merge gate, an OWASP ZAP baseline scan, and a documented stage-by-stage delivery history.
+- **Zero-cost local profile** *(implemented in the repository)*: ports and adapters for the job queue, object storage, e-mail and the LLM, chosen by a runtime profile. One `docker compose up` brings up a migrated PostgreSQL, S3-compatible storage, the API and the UI on a laptop, with no cloud spend. Locally the LLM classifier is off by default, and when it is off the API says so explicitly instead of returning an unsupported result.
+- **Local reference data** *(implemented in the repository)*: the official Ensembl VEP cache run as a local service (REST vs local equivalence checked on 330 of 330 variants), a versioned ClinVar snapshot matched by **allele** rather than by rsID, and region-sliced gnomAD v4.1 for the 33 genes of the curated panels. A coverage rule turns "outside the sliced regions" into an explicit technical failure — never a false "absent from gnomAD". While validating the ClinVar snapshot we measured that the public rsID lookup returned another allele's record for 66 of 129 multi-record rsIDs; the local backend fixes this by construction.
+- **Provenance and reinterpretation** *(implemented in the repository)*: every PDF report carries a traceability section (software image, database versions and dates, model and prompt hash), and a read-only API endpoint compares the stored evidence with the current local snapshot and flags classifications that may be out of date. It never reclassifies by itself.
+- **Command-line client** *(implemented in the repository)*: `gencodebio` — sign-in with MFA, upload, run pipeline stages, list variants, download the PDF report, inspect provenance. Passwords never go on the command line, only the session token is stored (owner-only file permissions), and logout revokes the session on the server. It uses the public API only.
+- **Operations** *(implemented in the repository)*: a readiness endpoint that checks the database (the plain health check deliberately does not), SBOM generation and a container vulnerability scan in CI.
+- **Quality:** 585 automated backend tests (also run against a real PostgreSQL in CI), 42 frontend tests and 26 CLI tests; CI on every push, dependency auditing as a merge gate, an OWASP ZAP baseline scan, and a documented stage-by-stage delivery history.
+
+> **Release note:** the items marked *implemented in the repository* are built and tested but not yet deployed to the hosted instance, which will be upgraded in a planned release.
 
 ## Architecture (high level)
 
@@ -46,7 +53,7 @@ flowchart LR
 
 Design principles — details in [docs/architecture.md](docs/architecture.md):
 
-1. **Ports and adapters.** Queue, storage, database, LLM and every external knowledge source sit behind an interface, so the same code can run at zero cost locally and scale out later by configuration only. (Queue and storage already work this way; the rest is in progress.)
+1. **Ports and adapters.** Queue, storage, database, LLM and every external knowledge source sit behind an interface, so the same code can run at zero cost locally and scale out later by configuration only. (Queue, storage, e-mail, the LLM and the knowledge sources already work this way; the database is a PostgreSQL container locally and managed PostgreSQL in the cloud.)
 2. **Provenance first.** Every annotation records which database/build/version produced it.
 3. **Evidence over eloquence.** The AI layer may only assert what it can cite.
 4. **Compliance by construction.** LGPD/GDPR-aware data handling, audit logging, and a quality system aligned with IEC 62304 / ISO 14971 from the start.
@@ -56,9 +63,11 @@ Design principles — details in [docs/architecture.md](docs/architecture.md):
 | Area | Status |
 |---|---|
 | Single-sample germline interpretation | ✅ working |
-| Zero-cost local profile (ports & adapters: queue, storage, database, LLM, knowledge sources) | 🔜 next |
+| Zero-cost local profile (ports & adapters: queue, storage, e-mail, LLM, knowledge sources) | ✅ built and tested (deployment to the hosted instance pending) |
 | Multilingual UI (EN / PT / ES / FR; more languages by configuration) | ✅ working |
-| Local reference snapshots (VEP cache, ClinVar, gnomAD) | 🔜 planned |
+| Local reference data (VEP cache, ClinVar snapshot, gnomAD slices) + reinterpretation endpoint | ✅ built and tested (deployment pending) |
+| Command-line client | ✅ built and tested |
+| Reinterpretation screen in the UI, periodic re-checks | 🔜 next |
 | FASTQ → VCF workflows (Nextflow / nf-core) | 🔜 planned |
 | Trio / multi-sample, CNV & structural variants | 🔜 planned |
 | Somatic oncology (COSMIC, OncoKB, cBioPortal) | 🔜 planned |
