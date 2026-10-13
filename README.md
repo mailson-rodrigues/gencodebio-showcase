@@ -58,6 +58,18 @@ Design principles — details in [docs/architecture.md](docs/architecture.md):
 3. **Evidence over eloquence.** The AI layer may only assert what it can cite.
 4. **Compliance by construction.** LGPD/GDPR-aware data handling, audit logging, and a quality system aligned with IEC 62304 / ISO 14971 from the start.
 
+## Screenshots
+
+Captured from a local development instance with **synthetic demo data** (no real patient data; no AI classification was run, which the UI states explicitly).
+
+| Sign-in (language chosen at sign-in) | Dashboard |
+|---|---|
+| ![Sign-in screen in English](docs/images/sign-in-en.jpg) | ![Dashboard](docs/images/dashboard.jpg) |
+
+| Sample view: pipeline actions, filters, QC flags | Related literature (PubMed) |
+|---|---|
+| ![Sample and variants view](docs/images/sample-variants.jpg) | ![Related literature](docs/images/sample-literature.jpg) |
+
 ## Roadmap
 
 | Area | Status |

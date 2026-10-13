@@ -28,6 +28,10 @@
 
 Veja o diagrama e os princípios (portas e adaptadores, proveniência, evidência antes de eloquência, conformidade por construção) na versão em [inglês](README.md) e em [docs/architecture.md](docs/architecture.md).
 
+## Capturas de tela
+
+Capturadas de uma instância local de desenvolvimento com **dados demonstrativos sintéticos** (nenhum dado real de paciente; nenhuma classificação por IA foi executada, o que a interface informa de forma explícita). Imagens na versão em [inglês](README.md#screenshots).
+
 ## Autor
 
 **Mailson Rodrigues** — biomédico e desenvolvedor, na interseção entre genética clínica, patologia molecular e engenharia de software. Aberto a conversas com investidores, colaboradores e equipes de genômica e saúde digital.
